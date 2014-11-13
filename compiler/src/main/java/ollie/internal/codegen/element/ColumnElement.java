@@ -240,8 +240,6 @@ public class ColumnElement {
 					return Float.class.getName();
 				case DOUBLE:
 					return Double.class.getName();
-				default:
-					throw new AssertionError();
 			}
 		}
 
