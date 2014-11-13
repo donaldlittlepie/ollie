@@ -46,10 +46,12 @@ public class ModelAdapterTest {
 						"	public static final String BODY = \"body\";",
 						"	public static final String DATE = \"date\";",
 						"	public static final String TAG = \"tag\";",
+						"	public static final String SHARES = \"shares\";",
 						"	@Column(TITLE) public String title;",
 						"	@Column(BODY) @NotNull public String body;",
 						"	@Column(DATE) public Date date;",
 						"	@Column(TAG) public Tag tag;",
+						"	@Column(SHARES) public int shares;",
 						"}"
 				));
 
@@ -90,7 +92,8 @@ public class ModelAdapterTest {
 						"			\"title TEXT, \" +",
 						"			\"body TEXT NOT NULL, \" +",
 						"			\"date INTEGER, \" +",
-				        "           \"tag INTEGER)\";",
+				        "           \"tag INTEGER, \" +",
+						"			\"shares INTEGER)\";",
 						"	}",
 						"	public final void load(Note entity, Cursor cursor) {",
 						"		entity.id = cursor.getLong(cursor.getColumnIndex(\"_id\"));",
@@ -100,6 +103,7 @@ public class ModelAdapterTest {
 						"				.deserialize(cursor.getLong(cursor.getColumnIndex(\"date\")));",
 						"       entity.tag = Ollie.getOrFindEntity(ollie.test.Tag.class, cursor",
 						"               .getLong(cursor.getColumnIndex(\"tag\")));",
+						"		entity.shares = cursor.getInt(cursor.getColumnIndex(\"shares\"));",
 						"	}",
 						"	public final Long save(Note entity, SQLiteDatabase db) {",
 						"		ContentValues values = new ContentValues();",
@@ -109,6 +113,7 @@ public class ModelAdapterTest {
 						"		values.put(\"date\", (Long) Ollie.getTypeAdapter(Date.class)",
 						"				.serialize(entity.date));",
 						"       values.put(\"tag\", entity.tag != null ? entity.tag.id : null);",
+						"		values.put(\"shares\", entity.shares);",
 						"		return insertOrUpdate(entity, db, values);",
 						"	}",
 						"	public final void delete(Note entity, SQLiteDatabase db) {",
@@ -116,6 +121,7 @@ public class ModelAdapterTest {
 						"	}",
 						"}"
 				));
+
 
 		ASSERT.about(javaSources()).that(Arrays.asList(source, tagSource))
 				.processedWith(ollieProcessors())
